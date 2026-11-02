@@ -18,3 +18,6 @@ Makefile
 .vscode/
 .vs/
 .idea/
+
+#archivos especificos
+otros.txt
