@@ -39,10 +39,10 @@ g++ main.cpp -o pong -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 ## 🎮 Controles
 
-| Jugador 1 (Izquierda) | Jugador 2 (Derecha) |
+| Jugador 1 (Izquierda)|
 | :--- | :--- |
-| **`W`** - Subir | **`UP`** - Subir |
-| **`S`** - Bajar | **`DOWN`** - Bajar |
+|**`UP`** - Subir |
+|**`DOWN`** - Bajar |
 
 ---
 
