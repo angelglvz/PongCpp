@@ -2,6 +2,9 @@
 #include <raylib.h>
 using namespace std;
 
+int player_score = 0;
+int cpu_score = 0;
+
 class Ball{
     public:
     float x, y;
@@ -19,10 +22,27 @@ class Ball{
         {
             speed_y *= -1;
         }
-        if(x + radius >= GetScreenWidth() || x - radius <= 0)
+        if(x + radius >= GetScreenWidth() )
         {
-            speed_x *= -1;
+            player_score++;
+            ResetBall();
         }
+
+        if(x - radius <= 0)
+        {
+            cpu_score++;
+            ResetBall();
+        }
+    }
+
+    void ResetBall() 
+    {
+        x = GetScreenWidth()/2;
+        y = GetScreenHeight()/2;
+
+        int speed_choices[2] = {-1, 1};
+        speed_x *= speed_choices[GetRandomValue(0,1)];
+        speed_y *= speed_choices[GetRandomValue(0,1)];
     }
 };
 
@@ -100,6 +120,7 @@ int main()
     const int ball_speed_x = 7;
     const int ball_speed_y = 7;
     const int paddle_speed = 6;
+    const int font_size = 80;
 
     InitWindow(screen_width, screen_height, "My Pong Game!");
     SetTargetFPS(60);
@@ -157,6 +178,10 @@ int main()
         player.Draw();
         computer.Draw();
         
+        //Drawing Score
+        DrawText(TextFormat("%i", player_score), screen_width/4, lateral_separation, font_size, WHITE);
+        DrawText(TextFormat("%i", cpu_score), screen_width/4 * 3, lateral_separation, font_size, WHITE);
+
         EndDrawing();
     }
 
