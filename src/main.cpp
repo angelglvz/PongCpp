@@ -28,14 +28,27 @@ class Ball{
 
 class Paddle
 {
+protected:
+    void LimitMovement()
+    {
+        if( y <= 0 )
+        {
+            y = 0;
+        }
+        if( y + height >= GetScreenHeight())
+        {
+            y = GetScreenHeight() - height;
+        }
+    }
+
 public:
     float x, y;
-    float width, heigth;
+    float width, height;
     int speed;
 
     void Draw() 
     {
-        DrawRectangle(x, y, width, heigth, WHITE);
+        DrawRectangle(x, y, width, height, WHITE);
     }
 
     void Update()
@@ -48,20 +61,30 @@ public:
         {
             y = y + speed;
         }
-        if( y <= 0 )
+        LimitMovement();
+    }
+};
+
+class Computer: public Paddle 
+{
+public:
+    void Update(int ball_y)
+    {
+        if( y + height/2 > ball_y)
         {
-            y = 0;
+            y = y - speed;
         }
-        if( y + heigth >= GetScreenHeight())
+        if( y + height/2 < ball_y)
         {
-            y = GetScreenHeight() - heigth;
+            y = y + speed;
         }
+        LimitMovement();
     }
 };
 
 Ball ball;
 Paddle player;
-Paddle computer;
+Computer computer;
 
 int main()
 {
@@ -72,7 +95,7 @@ int main()
     const int screen_height = 800;
     const int ball_radius = 20;
     const int paddle_width = 25;
-    const int paddle_heigth = 125;
+    const int paddle_height = 125;
     const int lateral_separation = 10;
     const int ball_speed_x = 7;
     const int ball_speed_y = 7;
@@ -90,10 +113,17 @@ int main()
 
     //initializing player
     player.x = lateral_separation;
-    player.y = screen_height/2 - (paddle_heigth/2);
-    player.heigth = paddle_heigth;
+    player.y = screen_height/2 - (paddle_height/2);
+    player.height = paddle_height;
     player.width = paddle_width;
     player.speed = paddle_speed;
+
+    //initializing computer
+    computer.x = screen_width - (lateral_separation + paddle_width);
+    computer.y = screen_height/2 - (paddle_height/2);
+    computer.height = paddle_height;
+    computer.width = paddle_width;
+    computer.speed = paddle_speed;
     
     while(WindowShouldClose() == false){
         BeginDrawing();
@@ -101,7 +131,7 @@ int main()
         //moving the parts;
         ball.Update();
         player.Update();
-        computer.Update();
+        computer.Update(ball.y);
 
         //cleaning background
         ClearBackground(BLACK);
@@ -112,10 +142,9 @@ int main()
         //drawing center line
         DrawLine(screen_width/2, 0, screen_width/2, screen_height, WHITE);
 
-        //Draw Player
+        //Draw Paddles
         player.Draw();
-        DrawRectangle(screen_width - (lateral_separation + paddle_width), screen_height/2 - (paddle_heigth/2), paddle_width, paddle_heigth, WHITE);
-
+        computer.Draw();
         
         EndDrawing();
     }
